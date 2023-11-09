@@ -24,6 +24,11 @@ namespace KLANLAR_BOT
         private System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
         private bool isTimerActive = false;
 
+        private System.Windows.Forms.Timer timer_kor = new System.Windows.Forms.Timer();
+        private bool isTimerActive_kor = false;
+
+
+
 
         List<string> saldirilacak_koyler=new List<string>();
 
@@ -167,8 +172,8 @@ namespace KLANLAR_BOT
                 textBox_max_sur_seviyesi.Enabled = true;
                 textBox_yagma_per.Enabled = true;
                 checkBox_okcu_var_mi.Enabled = true;
+                //textBox_kor_saldırı_per.Enabled = true;
 
-                    
                 
 
             }
@@ -190,6 +195,9 @@ namespace KLANLAR_BOT
             yagma_periyodu = int.Parse(textBox_yagma_per.Text);
             timer.Interval = yagma_periyodu*1000; // 30 saniye
             timer.Tick += Timer_Tick;
+
+            timer_kor.Interval = yagma_periyodu * 1000; // 30 saniye
+            timer_kor.Tick += Timer_Tick_kor_saldiri;
 
             selected = true;
             int yagma_ABC= 2;
@@ -270,7 +278,10 @@ namespace KLANLAR_BOT
          
                 
             button_otomatik_yagma.Enabled = true;
-          
+            button_kor_saldiri.Enabled = true;
+            button_tekil_kor.Enabled = true;
+            button_tekil_yagma.Enabled = true;
+
         }
 
         private void textBox1_TextChanged_1(object sender, EventArgs e)
@@ -334,7 +345,7 @@ namespace KLANLAR_BOT
 
         private void button_bilgiler_Click(object sender, EventArgs e)
         {
-            string kurulum = "Merhaba, Aşağıdaki notları uygulayın.\r\nYağma asistanında A ya Hafif Atlı Casus ve B ye Mızrak Kılıç Casus birim koyup kaydedin\r\nYağma asistanında Tüm Kayıpları Gösterme şeklinde ayarlayın\r\nYağma asistanında Şuanda Saldırılan köylerin raporlarını dahil et seçin.\r\nYağma asistanında sadece Bu köyden giden saldırıları gösteri seçin.\r\nSohbet Penceresini ve Bildirimklerini sağ alttan kapatın.";
+            string kurulum = "Merhaba, Aşağıdaki notları uygulayın.\r\nYağma asistanında A ya Hafif Atlı Casus ve B ye Mızrak Kılıç Casus birim koyup kaydedin\r\nYağma asistanında Tüm Kayıpları Gösterme şeklinde ayarlayın\r\nYağma asistanında Şuanda Saldırılan köylerin raporlarını dahil et seçin.\r\nYağma asistanında sadece Bu köyden giden saldırıları gösteri seçin.\r\nSohbet Penceresini ve Bildirimklerini sağ alttan kapatın.\n\rKör Yağma butonu en yakindaki köylere 3 mizrak 2 kılıç gönderir.Oyunun başında ahıra rushlamak için etkili olabilir.";
             MessageBox.Show(kurulum);
         }
 
@@ -376,6 +387,68 @@ namespace KLANLAR_BOT
         private async void Timer_Tick(object sender, EventArgs e)
         {
             await yagma_yap_func(); // Her 30 saniyede bir bu fonksiyon çalışacak
+        }
+        private async void Timer_Tick_kor_saldiri(object sender, EventArgs e)
+        {
+            await kor_soldiri_yap_func(); // Her 30 saniyede bir bu fonksiyon çalışacak
+        }
+
+        private void button_kor_saldiri_Click(object sender, EventArgs e)
+        {
+            if (!isTimerActive)
+            {
+                timer_kor.Start(); // Zamanlayıcıyı başlat
+                button_kor_saldiri.Text = "Kör Yağma Durdur";
+                isTimerActive_kor = true;
+            }
+            else
+            {
+                timer.Stop(); // Zamanlayıcıyı durdur
+                button_kor_saldiri.Text = "Kör Yağma Başlat";
+                isTimerActive_kor = false;
+            }
+        }
+
+        private async Task kor_soldiri_yap_func()
+        {
+
+            try
+            {
+                selected_indexes = listBox_Mevcut_Koyler.SelectedIndices.Cast<int>().ToList();
+                for (int i = 0; i < koy_yagma_ayarlari.Keys.Count / 4; i++)
+                {
+                    int islem_yapilan_koy_indeks = (int)(Math.Floor((Double)(koy_yagma_ayarlari.Keys.ToList<int>()[4 * i]) / 10));
+                    if (selected_indexes.Contains(islem_yapilan_koy_indeks))
+                    {
+                        await web_c.ilgili_koyu_sec_f(islem_yapilan_koy_indeks);
+
+                        var dict = await web_c.barbar_liste_dondur_f();
+
+                        await web_c.ilgili_koyu_sec_f(islem_yapilan_koy_indeks);
+
+                        await web_c.script_uygula(web_c.ictima_meydanı);
+
+                        await web_c.kilic_mizrak_gonder_f(dict, int.Parse(koy_yagma_ayarlari[10 * islem_yapilan_koy_indeks]));
+
+                    }
+
+                }
+            }
+            catch (Exception e1)
+            {
+                MessageBox.Show(e1.ToString());
+                return;
+            }
+        }
+
+        private async void button_tekil_kor_Click(object sender, EventArgs e)
+        {
+            await kor_soldiri_yap_func();
+        }
+
+        private async void button_tekil_yagma_Click(object sender, EventArgs e)
+        {
+            await yagma_yap_func();
         }
     }
 }

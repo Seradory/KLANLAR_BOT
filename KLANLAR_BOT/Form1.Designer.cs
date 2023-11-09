@@ -59,6 +59,9 @@
             this.label10 = new System.Windows.Forms.Label();
             this.textBox_yagma_per = new System.Windows.Forms.TextBox();
             this.checkBox_okcu_var_mi = new System.Windows.Forms.CheckBox();
+            this.button_kor_saldiri = new System.Windows.Forms.Button();
+            this.button_tekil_kor = new System.Windows.Forms.Button();
+            this.button_tekil_yagma = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // process1
@@ -372,11 +375,47 @@
             this.checkBox_okcu_var_mi.Text = "Dünyada Okçu Var mı";
             this.checkBox_okcu_var_mi.UseVisualStyleBackColor = true;
             // 
+            // button_kor_saldiri
+            // 
+            this.button_kor_saldiri.Enabled = false;
+            this.button_kor_saldiri.Location = new System.Drawing.Point(292, 279);
+            this.button_kor_saldiri.Name = "button_kor_saldiri";
+            this.button_kor_saldiri.Size = new System.Drawing.Size(94, 46);
+            this.button_kor_saldiri.TabIndex = 31;
+            this.button_kor_saldiri.Text = "Kör Saldırı Yap";
+            this.button_kor_saldiri.UseVisualStyleBackColor = true;
+            this.button_kor_saldiri.Click += new System.EventHandler(this.button_kor_saldiri_Click);
+            // 
+            // button_tekil_kor
+            // 
+            this.button_tekil_kor.Enabled = false;
+            this.button_tekil_kor.Location = new System.Drawing.Point(292, 331);
+            this.button_tekil_kor.Name = "button_tekil_kor";
+            this.button_tekil_kor.Size = new System.Drawing.Size(94, 46);
+            this.button_tekil_kor.TabIndex = 32;
+            this.button_tekil_kor.Text = "Tekil Kör Saldırı Yap";
+            this.button_tekil_kor.UseVisualStyleBackColor = true;
+            this.button_tekil_kor.Click += new System.EventHandler(this.button_tekil_kor_Click);
+            // 
+            // button_tekil_yagma
+            // 
+            this.button_tekil_yagma.Enabled = false;
+            this.button_tekil_yagma.Location = new System.Drawing.Point(615, 262);
+            this.button_tekil_yagma.Name = "button_tekil_yagma";
+            this.button_tekil_yagma.Size = new System.Drawing.Size(160, 63);
+            this.button_tekil_yagma.TabIndex = 33;
+            this.button_tekil_yagma.Text = "Tekil Yağma Başlat";
+            this.button_tekil_yagma.UseVisualStyleBackColor = true;
+            this.button_tekil_yagma.Click += new System.EventHandler(this.button_tekil_yagma_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.button_tekil_yagma);
+            this.Controls.Add(this.button_tekil_kor);
+            this.Controls.Add(this.button_kor_saldiri);
             this.Controls.Add(this.checkBox_okcu_var_mi);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.textBox_yagma_per);
@@ -448,6 +487,9 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.TextBox textBox_yagma_per;
         private System.Windows.Forms.CheckBox checkBox_okcu_var_mi;
+        private System.Windows.Forms.Button button_kor_saldiri;
+        private System.Windows.Forms.Button button_tekil_yagma;
+        private System.Windows.Forms.Button button_tekil_kor;
     }
 }
 
