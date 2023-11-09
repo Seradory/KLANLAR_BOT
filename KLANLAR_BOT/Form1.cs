@@ -23,10 +23,11 @@ namespace KLANLAR_BOT
     {
         private System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
         private bool isTimerActive = false;
+        private bool isTaskRunning = false;
 
         private System.Windows.Forms.Timer timer_kor = new System.Windows.Forms.Timer();
         private bool isTimerActive_kor = false;
-
+        private bool isTaskRunning_kor = false;
 
 
 
@@ -354,8 +355,7 @@ namespace KLANLAR_BOT
         private async Task yagma_yap_func()
         {
 
-            try
-            {
+
                 selected_indexes = listBox_Mevcut_Koyler.SelectedIndices.Cast<int>().ToList();
                 for (int i = 0; i < koy_yagma_ayarlari.Keys.Count / 4; i++)
                 {
@@ -375,27 +375,32 @@ namespace KLANLAR_BOT
                     }
 
                 }
-            }
-            catch (Exception e1)
-            {
-                MessageBox.Show(e1.ToString());
-                return;
-            }
+
         }
 
 
         private async void Timer_Tick(object sender, EventArgs e)
         {
-            await yagma_yap_func(); // Her 30 saniyede bir bu fonksiyon çalışacak
+            if (!isTaskRunning)
+            {
+                isTaskRunning = true;
+                await yagma_yap_func();
+                isTaskRunning = false;
+            }
         }
         private async void Timer_Tick_kor_saldiri(object sender, EventArgs e)
         {
-            await kor_soldiri_yap_func(); // Her 30 saniyede bir bu fonksiyon çalışacak
+            if (!isTaskRunning_kor)
+            {
+                isTaskRunning_kor = true;
+                await kor_soldiri_yap_func();
+                isTaskRunning_kor = false;
+            }
         }
 
         private void button_kor_saldiri_Click(object sender, EventArgs e)
         {
-            if (!isTimerActive)
+            if (!isTimerActive_kor)
             {
                 timer_kor.Start(); // Zamanlayıcıyı başlat
                 button_kor_saldiri.Text = "Kör Yağma Durdur";
@@ -403,7 +408,7 @@ namespace KLANLAR_BOT
             }
             else
             {
-                timer.Stop(); // Zamanlayıcıyı durdur
+                timer_kor.Stop(); // Zamanlayıcıyı durdur
                 button_kor_saldiri.Text = "Kör Yağma Başlat";
                 isTimerActive_kor = false;
             }
@@ -412,8 +417,7 @@ namespace KLANLAR_BOT
         private async Task kor_soldiri_yap_func()
         {
 
-            try
-            {
+
                 selected_indexes = listBox_Mevcut_Koyler.SelectedIndices.Cast<int>().ToList();
                 for (int i = 0; i < koy_yagma_ayarlari.Keys.Count / 4; i++)
                 {
@@ -433,12 +437,7 @@ namespace KLANLAR_BOT
                     }
 
                 }
-            }
-            catch (Exception e1)
-            {
-                MessageBox.Show(e1.ToString());
-                return;
-            }
+
         }
 
         private async void button_tekil_kor_Click(object sender, EventArgs e)
