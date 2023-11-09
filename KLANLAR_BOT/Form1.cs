@@ -403,7 +403,7 @@ namespace KLANLAR_BOT
             if (!isTimerActive_kor)
             {
                 timer_kor.Start(); // Zamanlayıcıyı başlat
-                button_kor_saldiri.Text = "Kör Yağma Durdurserdar";
+                button_kor_saldiri.Text = "Kör Yağma Durdur Serdar";
                 isTimerActive_kor = true;
             }
             else
